@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Resume Builder</title>
+  <link rel="shortcut icon" href="../harshtech-logo.jpg" type="image/x-icon">
+  <style>
+    :root {
+      --bg-light: #f4f4f4;
+      --bg-dark: #1e1e1e;
+      --text-light: #000;
+      --text-dark: #fff;
+      --card-light: #fff;
+      --card-dark: #2e2e2e;
+      --primary-color: #007bff;
+    }body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+header {
+  background: var(--primary-color);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.8rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 10px;
+}
+
+.controls button, .controls select {
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #444;
+  color: #fff;
+}
+
+.controls button:hover {
+  background: #222;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+form, .preview {
+  flex: 1 1 400px;
+  background: var(--card-light);
+  color: inherit;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+}
+
+body.dark .preview, body.dark form {
+  background: var(--card-dark);
+}
+
+input, textarea, select, button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+}
+
+button.add-btn {
+  background: #17a2b8;
+  color: white;
+}
+
+.preview {
+  font-family: var(--resume-font, 'Segoe UI');
+  overflow-wrap: break-word;
+}
+
+#photoPreview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.project-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  margin: 10px 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #28a745;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: none;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  z-index: 9999;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    padding: 10px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header>🤖 AI Resume Builder</header>  <div id="popup">✅ PDF downloaded successfully. Opening file...</div>  <div class="controls">
+    <button onclick="toggleTheme()">🌗 Toggle Theme</button>
+    <button onclick="suggestAI()">🧠 AI Suggestions</button>
+    <button onclick="saveResume()">💾 Save</button>
+    <button onclick="loadResume()">📂 Load</button>
+    <button onclick="downloadPDF()">📄 Download PDF</button>
+    <button onclick="shareEmail()">📧 Share</button>
+    <button onclick="readResume()">🔊 Read Resume</button>
+  </div>  <div class="container">
+    <form id="resumeForm">
+      <h2>Resume Details</h2>
+      <input type="file" id="photo" accept="image/*" onchange="previewPhoto()" />
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="text" id="phone" placeholder="Phone Number" required /><h3>Project Section</h3>
+  <input type="url" id="projectLink" placeholder="Project URL (optional)" />
+  <textarea id="projectDescription" placeholder="Project Description"></textarea>
+  <input type="file" id="projectImages" accept="image/*" multiple onchange="previewProjectImages()" />
+
+  <button type="submit">Generate Resume</button>
+</form>
+
+<div class="preview" id="resumePreview">
+  <h2>Preview</h2>
+  <div id="output"></div>
+</div>
+
+  </div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>  <script>
+    let profileImage = '';
+    let projectImageUrls = [];
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+    }
+
+    function showPopup(message) {
+      const popup = document.getElementById('popup');
+      popup.textContent = message;
+      popup.style.display = 'block';
+      setTimeout(() => popup.style.display = 'none', 3000);
+    }
+
+    function previewPhoto() {
+      const file = document.getElementById('photo').files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        profileImage = e.target.result;
+      };
+      if (file) reader.readAsDataURL(file);
+    }
+
+    function previewProjectImages() {
+      projectImageUrls = [];
+      const files = document.getElementById('projectImages').files;
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          projectImageUrls.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function suggestAI() {
+      document.getElementById('name').value = "Harshad Teli";
+      document.getElementById('email').value = "harshad@example.com";
+      document.getElementById('phone').value = "+91 9876543210";
+      document.getElementById('projectLink').value = "https://harshtech.in/project";
+      document.getElementById('projectDescription').value = "Smart Portfolio with Voice Assistant and Resume Generator.";
+    }
+
+    document.getElementById('resumeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const projectLink = document.getElementById('projectLink').value;
+      const projectDesc = document.getElementById('projectDescription').value;
+      const output = document.getElementById('output');
+
+      let imgHTML = '';
+      projectImageUrls.forEach(src => {
+        imgHTML += `<img src="${src}" class="project-image" />`;
+      });
+
+      output.innerHTML = `
+        ${profileImage ? `<img id='photoPreview' src='${profileImage}' />` : ''}
+        <h3>${name}</h3>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <h4>Project</h4>
+        ${projectLink ? `<p><a href='${projectLink}' target='_blank'>${projectLink}</a></p>` : ''}
+        <p>${projectDesc}</p>
+        <div class='project-gallery'>${imgHTML}</div>
+      `;
+    });
+
+    function downloadPDF() {
+      const element = document.getElementById('resumePreview');
+      const name = document.getElementById('name').value.trim().replace(/\s+/g, '_') || 'My_Resume';
+      const fileName = `${name}_Resume.pdf`;
+      const opt = {
+        margin: 0.5,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save().then(() => {
+        showPopup(`✅ PDF downloaded successfully as ${fileName}`);
+      });
+    }
+
+    function saveResume() {
+      const data = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        projectLink: document.getElementById('projectLink').value,
+        projectDescription: document.getElementById('projectDescription').value,
+        photo: profileImage,
+        projectImages: projectImageUrls
+      };
+      localStorage.setItem('resumeData', JSON.stringify(data));
+      showPopup("✅ Resume saved locally!");
+    }
+
+    function loadResume() {
+      const data = JSON.parse(localStorage.getItem('resumeData'));
+      if (!data) return alert("⚠️ No saved data found.");
+      document.getElementById('name').value = data.name;
+      document.getElementById('email').value = data.email;
+      document.getElementById('phone').value = data.phone;
+      document.getElementById('projectLink').value = data.projectLink;
+      document.getElementById('projectDescription').value = data.projectDescription;
+      profileImage = data.photo || '';
+      projectImageUrls = data.projectImages || [];
+      showPopup("✅ Resume loaded!");
+    }
+
+    function readResume() {
+      const speech = new SpeechSynthesisUtterance();
+      speech.text = document.getElementById('output').innerText;
+      speech.lang = 'en-US';
+      window.speechSynthesis.speak(speech);
+    }
+
+    function shareEmail() {
+      const name = document.getElementById('name').value;
+      const emailBody = encodeURIComponent(`Hi,\n\nPlease find my resume below:\n\n${document.getElementById('output').innerText}\n\nRegards,\n${name}`);
+      window.location.href = `mailto:?subject=My Resume&body=${emailBody}`;
+    }
+  </script>
+  <script src="prevent.js"></script></body>
+</html>
+
+
+

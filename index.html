@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Resume Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="shortcut icon" href="harshtech-logo.jpg" type="image/x-icon">nk
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #2b5876, #4e4376);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  padding: 2rem;
+  text-align: center;
+  background-color: rgba(0,0,0,0.3);
+}
+
+header h1 {
+  font-size: 2.5rem;
+}
+
+header p {
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  color: #ccc;
+}
+
+.section {
+  padding: 3rem 2rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 280px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.card h3 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  color: #fbd46d;
+}
+
+.card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.cta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.cta button {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  background-color: #fbd46d;
+  color: #2b2b2b;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.cta button:hover {
+  background-color: #f3c13a;
+}
+
+footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2rem;
+  }
+  .card {
+    width: 90%;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🤖 AI Resume Assistant</h1>
+    <p>Build smart, beautiful resumes with voice, AI, and PDF export in seconds.</p>
+  </header>  <section class="section">
+    <div class="features">
+      <div class="card">
+        <h3>🧠 AI Suggestions</h3>
+        <p>Instantly fill your resume with smart AI-based recommendations tailored to your skills.</p>
+      </div>
+      <div class="card">
+        <h3>🖼️ Project Image Upload</h3>
+        <p>Showcase your portfolio with project screenshots and live previews in your resume.</p>
+      </div>
+      <div class="card">
+        <h3>📄 Export as PDF</h3>
+        <p>Download your resume in a clean, formatted PDF with your name as the file title.</p>
+      </div>
+      <div class="card">
+        <h3>🔊 Voice Reader</h3>
+        <p>Let the assistant read out your resume using built-in voice synthesis technology.</p>
+      </div>
+      <div class="card">
+        <h3>🌓 Dark/Light Mode</h3>
+        <p>Toggle between elegant themes for day or night usability and presentation.</p>
+      </div>
+      <div class="card">
+        <h3>📧 Share via Email</h3>
+        <p>Quickly share your resume through pre-filled emails with just one click.</p>
+      </div>
+    </div><div class="cta">
+  <button onclick="location.href='./PAGES/airesume.html'">🚀 Launch Resume Builder</button>
+</div>
+
+  </section>  <footer>
+    Made with ❤️ by HarshTech • © 2025
+  </footer>
+  <script src="./PAGES/prevent.js"></script>
+</body>
+</html>
